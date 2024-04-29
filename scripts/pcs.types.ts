@@ -12,8 +12,8 @@ export type Cyclist = {
   team: string;
   country?: string;
   birthdate?: string;
-  height?: string;
-  weight?: string;
+  height?: number;
+  weight?: number;
   points: string;
   topRaceResults?: CyclistRaceResult[];
 }
