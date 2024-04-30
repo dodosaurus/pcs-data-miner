@@ -14,6 +14,8 @@ test("main", async ({ page }) => {
   const current_time = new Date(Date.now());
   output.timestamp = current_time.toISOString();
 
+  /* CYCLISTS */
+
   //go to page
   await page.goto("https://procyclingstats.com/rankings.php");
 
@@ -102,7 +104,7 @@ test("main", async ({ page }) => {
 
     one_cyclist.topRaceResults = results_to_insert;
 
-    console.log(one_cyclist)
+    console.log(one_cyclist);
 
     output.cyclists.push(one_cyclist);
 
@@ -110,8 +112,53 @@ test("main", async ({ page }) => {
     await page.goto("https://procyclingstats.com/rankings.php");
   }
 
+  /* RACES */
+
+  //go to page
+  await page.goto("https://procyclingstats.com/races.php");
+
+  // await page.getByRole("button", { name: "Accept All" }).click();
+
+  // Expect a title "to contain" a substring.
+  await expect(page).toHaveTitle(/UCI Cycling calendar 2024/);
+
+  // get list of rows from table
+  const tbl_races = page.locator("//table/tbody/tr");
+  const chs_races = await tbl_races.all();
+
+  //iterate through elements a print out ranking and name of cyclists at first
+  for (const ch of chs_races) {
+    let one_race: Race = {
+      country: "",
+      date: "",
+      name: "",
+      lastWinner: "",
+      class: "",
+    };
+
+    //get general info from first table
+    one_race.date = await ch.locator("td").nth(0).innerText();
+    one_race.name = (await ch.locator("td").nth(2).innerText()).trim();
+    one_race.lastWinner = await ch.locator("td").nth(3).innerText();
+    one_race.class = await ch.locator("td").nth(4).innerText();
+
+    //get abbreviation of country
+    let country_race = await ch.locator("//span").getAttribute("class");
+    country_race = country_race?.replace("flag ", "").toUpperCase() as string;
+    one_race.country = country_race
+
+    console.log(one_race);
+
+    output.races.push(one_race);
+
+    //back to table
+    // await page.goto("https://procyclingstats.com/rankings.php");
+  }
+
+
+
   // console.log(output);
 
   //export to JSON file
-  fs.writeFileSync(`output_${current_time.toISOString()}.json`, JSON.stringify(output));
+  fs.writeFileSync(`versions/output_${current_time.toISOString()}.json`, JSON.stringify(output));
 });

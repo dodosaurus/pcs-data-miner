@@ -19,9 +19,10 @@ export type Cyclist = {
 }
 
 export type Race = {
+  country: string;
   date: string;
   name: string;
-  currentWinner: string;
+  lastWinner: string;
   class: string;
 }
 
