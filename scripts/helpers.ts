@@ -70,3 +70,7 @@ export function extractHeight(inputString: string) {
     return null;
   }
 }
+
+export function removeSpaces(inputString: string) {
+  return inputString.replace("&nbsp;","").trim().replace(/\u00A0/, " ");
+}

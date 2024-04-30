@@ -1,6 +1,6 @@
 
 export type CyclistRaceResult = {
-  times: string;
+  modifier: string;
   type: string;
   raceName: string;
   years: string;
